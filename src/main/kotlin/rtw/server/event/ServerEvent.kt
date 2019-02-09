@@ -10,7 +10,6 @@ import rtw.common.data.RTWData
 import rtw.common.utils.toJson
 import rtw.server.utils.rtwDataRetriever
 import rtw.server.utils.setTimeFromZone
-import java.time.ZoneId
 
 class ServerEvent {
     init {
@@ -28,7 +27,8 @@ class ServerEvent {
     }
 
     private fun processRtwData(world: World, rtwData: RTWData) {
-        world.setTimeFromZone(ZoneId.of(rtwData.zoneId))
+        world.setTimeFromZone(rtwData.zoneId)
+
     }
 
     private fun syncRtwData(rtwData: RTWData) {

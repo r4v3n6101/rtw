@@ -9,6 +9,6 @@ import java.time.ZoneId
 val rtwDataRetriever: DataRetriever by lazy { ScriptDataRetriever() }
 
 fun World.setTimeFromZone(zone: ZoneId) {
-    val time = OffsetTime.now(zone)
-    worldTime = ((time.hour - 6) * 1000 + time.minute * 1000 / 60) % 24000L
+    val time = OffsetTime.now(zone).minusHours(6)
+    worldTime = ((time.hour + time.minute / 60f) * 1000f).toLong() % 24000L
 }

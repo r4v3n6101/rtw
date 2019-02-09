@@ -4,7 +4,6 @@ import net.minecraft.command.CommandBase
 import net.minecraft.command.ICommandSender
 import rtw.server.utils.rtwDataRetriever
 import java.time.OffsetTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 class CommandRtime : CommandBase() {
@@ -19,7 +18,7 @@ class CommandRtime : CommandBase() {
         func_152373_a(
                 sender, this,
                 OffsetTime
-                        .now(ZoneId.of(rtwDataRetriever.retrieve().zoneId))
+                        .now(rtwDataRetriever.retrieve().zoneId)
                         .format(DateTimeFormatter.ISO_OFFSET_TIME)
         )
     }
