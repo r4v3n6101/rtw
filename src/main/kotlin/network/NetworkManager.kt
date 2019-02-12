@@ -16,6 +16,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.NetHandlerPlayServer
 
+/**
+ * @author agravaine
+ */
 class NetworkManager(private val channelName: String, private val callback: PacketCallback) {
     private val channel: FMLEventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel(channelName)
 

@@ -4,16 +4,22 @@ import cpw.mods.fml.common.event.FMLInitializationEvent
 import cpw.mods.fml.common.event.FMLPostInitializationEvent
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import cpw.mods.fml.common.event.FMLServerStartingEvent
-import rtw.server.commands.CommandRtime
+import net.minecraftforge.common.DimensionManager
+import rtw.common.world.CustomWorldProvider
+import rtw.server.command.CommandRtime
 import rtw.server.event.ServerEvent
+import rtw.server.util.rtwDataRetriever
 
 open class CommonProxy {
 
     open fun preInit(event: FMLPreInitializationEvent) {
-        ServerEvent() // Init event
+        rtwDataRetriever // Initialize retriever
     }
 
     open fun init(event: FMLInitializationEvent) {
+        DimensionManager.unregisterProviderType(0)
+        DimensionManager.registerProviderType(0, CustomWorldProvider::class.java, true)
+        ServerEvent() // Init event
     }
 
     open fun postInit(event: FMLPostInitializationEvent) {

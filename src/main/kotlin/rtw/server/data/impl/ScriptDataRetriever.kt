@@ -2,30 +2,31 @@ package rtw.server.data.impl
 
 import rtw.server.data.DataRetriever
 import java.nio.file.Files
-import java.nio.file.Paths
+import java.nio.file.Path
 import javax.script.Invocable
 import javax.script.ScriptEngineManager
 
-class ScriptDataRetriever(
-        path: String = System.getProperty("rtw.script.path", "script.rtw"),
-        scriptEngineName: String = System.getProperty("rtw.script.enginename", "nashorn")
-) : DataRetriever {
+class ScriptDataRetriever(scriptDir: Path) : DataRetriever {
 
-    private var scriptRetriever: DataRetriever = DefaultDataRetriever
+    private var _retriever: DataRetriever = DefaultDataRetriever
 
     init {
-        val scriptPath = Paths.get(path)
-
-        if (Files.exists(scriptPath)) {
-            val scriptCode = String(Files.readAllBytes(scriptPath))
-            val scriptEngine = ScriptEngineManager().getEngineByName(scriptEngineName)
-            scriptEngine.eval(scriptCode)
-            if (scriptEngine is Invocable)
-                scriptRetriever = scriptEngine.getInterface(DataRetriever::class.java)
-        } else {
-            println("Script not found at ${scriptPath.toAbsolutePath()}, switch to default")
+        Files.walk(scriptDir).filter {
+            Files.isRegularFile(it) &&
+                    it.toFile().nameWithoutExtension == "script"
+        }.forEach { scriptFile ->
+            println("Found: $scriptFile")
+            val extension = scriptFile.toFile().extension
+            val scriptEngine = ScriptEngineManager().getEngineByExtension(extension)
+            if (scriptEngine is Invocable) {
+                scriptEngine.eval(Files.newBufferedReader(scriptFile))
+                _retriever = scriptEngine.getInterface(DataRetriever::class.java)
+                println("Appropriate script, extension=.$extension")
+            } else {
+                println("ScriptEngine isn't invocable, skip")
+            }
         }
     }
 
-    override fun retrieve() = scriptRetriever.retrieve()
+    override fun retrieve() = _retriever.retrieve()
 }

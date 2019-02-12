@@ -7,9 +7,9 @@ import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import rtw.common.ModMain
 import rtw.common.data.RTWData
-import rtw.common.utils.toJson
-import rtw.server.utils.rtwDataRetriever
-import rtw.server.utils.setTimeFromZone
+import rtw.common.util.toJson
+import rtw.server.util.rtwDataRetriever
+import rtw.server.util.setTimeFromZone
 
 class ServerEvent {
     init {
@@ -27,7 +27,7 @@ class ServerEvent {
     }
 
     private fun processRtwData(world: World, rtwData: RTWData) {
-        world.setTimeFromZone(rtwData.zoneId)
+        world.setTimeFromZone(rtwData.zoneOffset)
 
     }
 

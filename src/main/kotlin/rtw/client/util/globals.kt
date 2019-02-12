@@ -1,4 +1,4 @@
-package rtw.client.utils
+package rtw.client.util
 
 import rtw.common.data.RTWData
 

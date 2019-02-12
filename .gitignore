@@ -3,4 +3,4 @@ out
 build
 game
 .gradle
-*.iml
+!/game/scripts/*

@@ -6,8 +6,8 @@ import net.minecraft.client.entity.EntityClientPlayerMP
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.world.World
 import network.PacketCallback
-import rtw.client.utils.clientRtwData
-import rtw.common.utils.fromJson
+import rtw.client.util.clientRtwData
+import rtw.common.util.fromJson
 
 object RTWPacketCallback : PacketCallback {
 

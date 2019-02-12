@@ -8,8 +8,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import cpw.mods.fml.common.event.FMLServerStartingEvent
 import network.NetworkManager
 import rtw.common.network.RTWPacketCallback
-import rtw.common.utils.MODID
-import rtw.common.utils.NAME
+import rtw.common.util.MODID
+import rtw.common.util.NAME
 
 @Mod(modid = MODID, name = NAME, version = "NO-VERSION")
 class ModMain {
