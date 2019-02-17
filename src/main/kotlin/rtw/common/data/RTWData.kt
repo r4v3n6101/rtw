@@ -1,13 +1,13 @@
 package rtw.common.data
 
-import java.time.LocalTime
 import java.time.ZoneOffset
 
 data class RTWData(
+        val latitude: Float = 0f, // Degress
+        val longitude: Float = 0f, //Degrees
         val zoneOffset: ZoneOffset = ZoneOffset.UTC, // 'nuff said
-        val sunriseTime: LocalTime = LocalTime.of(6, 0), // UTC
-        val sunsetTime: LocalTime = LocalTime.of(22, 0), // UTC
+
         val temperature: Float = 20f, // Celsius
         val visibility: Float = Float.MAX_VALUE, // Meters
-        val cloudiness: Float = 50f // Percentage
+        val cloudiness: Float = 0.5f // Percentage / 100
 )

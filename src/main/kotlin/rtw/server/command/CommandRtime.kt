@@ -2,7 +2,7 @@ package rtw.server.command
 
 import net.minecraft.command.CommandBase
 import net.minecraft.command.ICommandSender
-import rtw.server.util.rtwDataRetriever
+import rtw.common.ModMain
 import java.time.OffsetTime
 import java.time.format.DateTimeFormatter
 
@@ -18,7 +18,7 @@ class CommandRtime : CommandBase() {
         func_152373_a(
                 sender, this,
                 OffsetTime
-                        .now(rtwDataRetriever.retrieve().zoneOffset)
+                        .now(ModMain.proxy.rtwData.zoneOffset)
                         .format(DateTimeFormatter.ISO_OFFSET_TIME)
         )
     }

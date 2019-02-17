@@ -3,4 +3,3 @@ out
 build
 game
 .gradle
-!/game/scripts/*

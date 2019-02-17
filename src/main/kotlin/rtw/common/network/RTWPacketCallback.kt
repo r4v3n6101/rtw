@@ -6,7 +6,7 @@ import net.minecraft.client.entity.EntityClientPlayerMP
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.world.World
 import network.PacketCallback
-import rtw.client.util.clientRtwData
+import rtw.common.ModMain
 import rtw.common.util.fromJson
 
 object RTWPacketCallback : PacketCallback {
@@ -15,7 +15,7 @@ object RTWPacketCallback : PacketCallback {
 
     override fun handleClientSide(buf: ByteBuf, world: World, player: EntityClientPlayerMP) {
         when (buf.readInt()) { // Check packet-id's
-            0 -> clientRtwData = fromJson(ByteBufUtils.readUTF8String(buf))
+            0 -> ModMain.proxy.rtwData = fromJson(ByteBufUtils.readUTF8String(buf))
         }
     }
 }

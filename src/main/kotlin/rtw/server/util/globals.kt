@@ -2,13 +2,12 @@ package rtw.server.util
 
 import net.minecraft.world.World
 import rtw.server.data.DataRetriever
-import rtw.server.data.impl.ScriptDataRetriever
-import java.nio.file.Paths
+import rtw.server.data.impl.OpenWeatherDataRetriever
 import java.time.OffsetTime
 import java.time.ZoneOffset
 
 val rtwDataRetriever: DataRetriever by lazy {
-    ScriptDataRetriever(Paths.get(System.getProperty("rtw.script.path", "scripts/")))
+    OpenWeatherDataRetriever()
 }
 
 fun World.setTimeFromZone(offset: ZoneOffset) {
