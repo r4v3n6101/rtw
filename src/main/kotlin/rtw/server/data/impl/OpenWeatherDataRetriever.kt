@@ -3,34 +3,37 @@ package rtw.server.data.impl
 import com.google.gson.JsonParser
 import rtw.common.data.RTWData
 import rtw.server.data.DataRetriever
-import java.io.IOException
 import java.net.URL
 import java.time.Duration
 import java.time.ZoneOffset
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
+import java.util.concurrent.Future
+import java.util.concurrent.FutureTask
 
 class OpenWeatherDataRetriever(
-        private val updateDelay: Long = Duration.ofMinutes(1).toMillis(),
-        private val offset: ZoneOffset = ZoneOffset.of("-5"),
+        private val updateDelay: Long = Duration.ofMinutes(10).toMillis(),
+        private val offset: ZoneOffset = ZoneOffset.of("+3"),
         apiKey: String = "0b26f2a80235ec3a9986ff95d551e24f",
-        city: String = "new%20york,us"
+        city: String = "moscow,ru"
 ) : DataRetriever {
-    private val weatherUrl = "https://api.openweathermap.org/data/2.5/weather?q=$city&appid=$apiKey&units=metric"
-    private val cachedRtwData: CompletableFuture<RTWData> = CompletableFuture()
 
-    private var lastConfigUpdate: Long = 0
+    private val weatherUrl = URL("https://api.openweathermap.org/data/2.5/weather?q=$city&appid=$apiKey&units=metric")
+    private var futureRtwData: Future<RTWData?> = FutureTask { null }
+    private var lastConfigUpdate = 0L
 
-    @Throws(IOException::class)
-    private fun requestData(): RTWData {
-        val response = URL(weatherUrl).readText()
+    /**
+     * @return null if error ocured, rtw data otherwise
+     */
+    private fun requestData() = try {
+        val response = weatherUrl.readText()
+        println("Get response: $response")
         val root = JsonParser().parse(response).asJsonObject
 
         val coord = root.getAsJsonObject("coord")
         val main = root.getAsJsonObject("main")
         val clouds = root.getAsJsonObject("clouds")
 
-        return RTWData(
+        RTWData(
                 latitude = coord["lat"].asFloat,
                 longitude = coord["lon"].asFloat,
                 zoneOffset = offset,
@@ -38,24 +41,16 @@ class OpenWeatherDataRetriever(
                 visibility = root["visibility"].asInt.toFloat(),
                 cloudiness = clouds["all"].asInt.toFloat()
         )
+    } catch (t: Throwable) {
+        t.printStackTrace()
+        null
     }
 
     override fun retrieve(): RTWData {
         if (lastConfigUpdate + updateDelay < System.currentTimeMillis()) {
-            Executors.newCachedThreadPool().submit {
-                try {
-                    val data = requestData()
-                    cachedRtwData.complete(data)
-                    println("Data updated: $data")
-                } catch (t: Throwable) {
-                    cachedRtwData.completeExceptionally(t)
-                    t.printStackTrace()
-                }
-            }
-
+            futureRtwData = Executors.newCachedThreadPool().submit(::requestData)
             lastConfigUpdate = System.currentTimeMillis()
         }
-        return cachedRtwData.getNow(DefaultDataRetriever.retrieve())
+        return futureRtwData.get() ?: DefaultDataRetriever.retrieve()
     }
 }
-

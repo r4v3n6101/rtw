@@ -7,7 +7,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent
 import net.minecraftforge.common.DimensionManager
 import rtw.common.data.RTWData
 import rtw.common.world.CustomWorldProvider
-import rtw.server.command.CommandRtime
+import rtw.server.command.CommandRtw
 import rtw.server.event.ServerEvent
 
 open class CommonProxy {
@@ -27,6 +27,6 @@ open class CommonProxy {
     }
 
     open fun serverStarting(event: FMLServerStartingEvent) {
-        event.registerServerCommand(CommandRtime())
+        event.registerServerCommand(CommandRtw())
     }
 }

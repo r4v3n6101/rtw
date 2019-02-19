@@ -1,9 +1,11 @@
 package rtw.common.util
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import kotlin.math.PI
 import kotlin.math.cos
+import kotlin.math.round
 import kotlin.math.sin
 
 /*fun getDayFraction(time: LocalTime) = time.toSecondOfDay().toDouble() / Duration.ofDays(1).seconds
@@ -53,3 +55,18 @@ fun getSolarHourAngle(longitude: Double): Double {
     val solarTime = ltd.toLocalTime().toSecondOfDay() + (longitude * 4 + eot) * 60
     return (solarTime - 12 * 60 * 60) / (24 * 60 * 60) * 360
 }
+
+const val LUNAR_MONTH = 30 // For
+val MOON_PHASES_NAMES = arrayOf(
+        "New moon", "Waxing Crescent", "First Quarter", "Waxing Gibbous",
+        "Full moon", "Waning Gibbous", "Third Quarter", "Waning Crescent"
+)
+
+fun getDaysSinceNewMoon(ld: LocalDate) = if (ld.monthValue == 1 || ld.monthValue == 2)
+    ((ld.year - 1) % 19 * 11 + 9 + ld.monthValue + ld.dayOfMonth) % 30
+else
+    (ld.year % 19 * 11 + ld.monthValue - 3 + ld.dayOfMonth) % 30
+
+fun getMoonPhaseNumber(n: Int) = round(8.0 * n / LUNAR_MONTH).toInt() % 8
+
+fun getMoonIllumination(n: Int) = sin(PI * n / LUNAR_MONTH)
